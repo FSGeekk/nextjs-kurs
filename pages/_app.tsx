@@ -1,9 +1,15 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { AppShell, Button, Container, Group, Header, MantineProvider, Title, UnstyledButton } from '@mantine/core';
+import { AppShell, Button, Container, MantineProvider, Title, UnstyledButton } from '@mantine/core';
 import Link from 'next/link';
+import { UserProvider } from '@supabase/auth-helpers-react';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { Header } from '../components/header/Header';
 
 export default function App(props: AppProps) {
+  const router = useRouter();
   const { Component, pageProps } = props;
 
   return (
@@ -20,30 +26,19 @@ export default function App(props: AppProps) {
           colorScheme: 'light',
         }}
       >
-        <AppShell
-          padding="lg"
-          header={
-            <Header height={60} p="xs">
-              <Group align="center" position="apart">
-                <Link href="/" passHref>
-                  <UnstyledButton component="a">
-                    <Title order={1}>Twój blog</Title>
-                  </UnstyledButton>
-                </Link>
-                <Link href="new-post" passHref>
-                  <Button component="a">Dodaj Wpis</Button>
-                </Link>
-              </Group>
-            </Header>
-          }
-          styles={(theme) => ({
-            main: { height: '100%' },
-          })}
-        >
-          <Container size="lg">
-            <Component {...pageProps} />
-          </Container>
-        </AppShell>
+        <UserProvider supabaseClient={supabaseClient}>
+          <AppShell
+            padding="lg"
+            header={<Header />}
+            styles={(theme) => ({
+              main: { height: '100%' },
+            })}
+          >
+            <Container size="lg">
+              <Component {...pageProps} />
+            </Container>
+          </AppShell>
+        </UserProvider>
       </MantineProvider>
     </>
   );

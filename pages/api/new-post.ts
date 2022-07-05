@@ -1,8 +1,10 @@
 import { Prisma } from '@prisma/client';
+import { getUser, withApiAuth } from '@supabase/auth-helpers-nextjs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../lib/prisma';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default withApiAuth(async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { user } = await getUser({ req, res });
   const body = req.body;
 
   try {
@@ -10,6 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         ...body,
         createdAt: new Date(),
+        createdBy: user.id,
       },
     });
 
@@ -28,4 +31,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   return res.status(400).json({ error: 'Something went wrong. Try again' });
-}
+});

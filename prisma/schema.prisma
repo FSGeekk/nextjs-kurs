@@ -16,4 +16,5 @@ model Post {
   slug      String @unique
   content   String
   createdAt DateTime
+  createdBy String?
 }

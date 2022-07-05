@@ -9,8 +9,11 @@ import { TextareaInput } from '../components/form/TextareaInput';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { PostSchema, postSchema } from '../utils/postSchema';
+import { User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 
-const NewPost: NextPage = () => {
+export const getServerSideProps = withPageAuth({ redirectTo: '/login' });
+
+const NewPost: NextPage<{ user: User }> = ({ user }) => {
   const router = useRouter();
   const [error, setError] = useState<null | string>(null);
   const { control, handleSubmit } = useForm<PostSchema>({
@@ -32,7 +35,6 @@ const NewPost: NextPage = () => {
       body: JSON.stringify(data),
     });
 
-    console.log(response);
     if (response.status === 200) {
       return router.push('/');
     }
