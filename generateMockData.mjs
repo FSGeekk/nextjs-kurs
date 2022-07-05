@@ -12,12 +12,8 @@ const mockedData = [...new Array(10).fill(0)].map(() => ({
   createdAt: faker.date.between('2022-06-01T00:00:00.000Z', '2022-06-30T00:00:00.000Z'),
 }));
 
-const mockData = async () => {
-  const result = await prisma.post.createMany({
-    data: mockedData,
-  });
+const result = await prisma.post.createMany({
+  data: mockedData,
+});
 
-  console.log(result);
-};
-
-mockData();
+console.log(result);
